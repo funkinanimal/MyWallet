@@ -2,6 +2,7 @@ package mocktests;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 class Wallet{
 
@@ -63,7 +64,20 @@ class Wallet{
     }
 
     int getTotalMoney(String currency) {
-        //bank.convert();
-        return 0;
+        int q = 0;
+        for (Map.Entry<String, Integer> curr : money.entrySet() ) {
+            if (Objects.equals(curr.getKey(), currency)) {
+                q += curr.getValue();
+            }
+            else {
+                try {
+                    q += bank.convert(curr.getValue(), curr.getKey(), currency);
+                }
+                catch (Exception ex) {
+                    System.out.print(ex.getMessage());
+                }
+            }
+        }
+        return q;
     }
 }
