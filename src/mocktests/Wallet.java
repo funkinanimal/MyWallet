@@ -20,12 +20,15 @@ class Wallet{
             money.put(currency, money.get(currency) + amount);
         else
             money.put(currency, amount);
+        moneyPrinter.print("add", currency, amount);
     }
 
     void removeMoney(String currency, int amount) throws Exception {
         if (money.containsKey(currency)) {
-            if (money.get(currency) >= amount)
+            if (money.get(currency) >= amount) {
                 money.put(currency, money.get(currency) - amount);
+                moneyPrinter.print("remove", currency, amount);
+            }
             else {
                 throw new Exception("No Money!");
             }
