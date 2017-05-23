@@ -1,13 +1,11 @@
 package mocktests;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class WalletTest extends Assert {
 
@@ -18,16 +16,18 @@ public class WalletTest extends Assert {
         wallet = new Wallet();
     }
 
-    @After
-    public void tearDown() {
-
-    }
-
     @Test
     public void addMoney() {
         wallet.addMoney("RUB", 600);
         wallet.addMoney("USD", 100);
         wallet.addMoney("RUB", 600);
+        assertEquals(1200, wallet.getMoney("RUB"));
+        assertEquals(100, wallet.getMoney("USD"));
+    }
+
+    @Test
+    public void removeMoney() {
+        wallet.addMoney("RUB", 1200);
         try {
             wallet.removeMoney("RUB", 1200);
         }
@@ -35,8 +35,29 @@ public class WalletTest extends Assert {
             System.out.print(ex.getMessage());
         }
         assertEquals(0, wallet.getMoney("RUB"));
+        try {
+            wallet.removeMoney("RUB", 1200);
+        }
+        catch (Exception ex) {
+            System.out.print(ex.getMessage());
+        }
+        assertEquals(0, wallet.getMoney("RUB"));
+    }
+
+    @Test
+    public void getCurrencyCount() throws Exception {
+        wallet.addMoney("EUR", 100);
+        wallet.removeMoney("EUR", 100);
+        wallet.addMoney("USD", 50);
         assertEquals(1, wallet.getCurrencyCount());
-        System.out.print(wallet.toString());
+    }
+
+    @Test
+    public void toStringTest() {
+        assertEquals("{ }", wallet.toString());
+        wallet.addMoney("RUB", 100);
+        wallet.addMoney("USD", 200);
+        assertEquals("{ 200 USD, 100 RUB }", wallet.toString());
     }
 
     @Test
@@ -44,11 +65,16 @@ public class WalletTest extends Assert {
         Bank bank = mock(Bank.class);
         when(bank.convert(200,"USD","RUB")).thenReturn(11274d);
         when(bank.convert(300,"EUR", "RUB")).thenReturn(18915d);
+
+        when(bank.convert(100, "RUB", "USD")).thenReturn(1.7638);
+        when(bank.convert(300, "EUR", "USD")).thenReturn(267d);
+
         wallet = new Wallet(bank);
         wallet.addMoney("RUB", 100);
         wallet.addMoney("USD", 200);
         wallet.addMoney("EUR", 300);
         assertEquals(30289, wallet.getTotalMoney("RUB"));
+        assertEquals(468, wallet.getTotalMoney("USD"));
     }
 
 }

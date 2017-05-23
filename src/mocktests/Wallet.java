@@ -64,7 +64,8 @@ class Wallet{
         for (Map.Entry<String, Integer> curr : money.entrySet() ) {
             out.append(curr.getValue()).append(" ").append(curr.getKey()).append(", ");
         }
-        out.deleteCharAt(out.length() - 2);
+        if (money.values().size() != 0)
+            out.deleteCharAt(out.length() - 2);
         out.append("}");
         return out.toString();
     }
