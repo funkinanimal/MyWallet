@@ -16,6 +16,12 @@ class Wallet{
         moneyPrinter = new MoneyPrinter();
     }
 
+    Wallet(Bank bank) {
+        money = new HashMap<>();
+        moneyPrinter = new MoneyPrinter();
+        this.bank = bank;
+    }
+
     void addMoney(String currency, int amount) {
         if (money.containsKey(currency))
             money.put(currency, money.get(currency) + amount);

@@ -5,6 +5,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Map;
+
+import static org.mockito.Mockito.*;
+
 public class WalletTest extends Assert {
 
     private Wallet wallet;
@@ -33,6 +37,18 @@ public class WalletTest extends Assert {
         assertEquals(0, wallet.getMoney("RUB"));
         assertEquals(1, wallet.getCurrencyCount());
         System.out.print(wallet.toString());
+    }
+
+    @Test
+    public void getTotalMoney() throws Exception {
+        Bank bank = mock(Bank.class);
+        when(bank.convert(200,"USD","RUB")).thenReturn(11274d);
+        when(bank.convert(300,"EUR", "RUB")).thenReturn(18915d);
+        wallet = new Wallet(bank);
+        wallet.addMoney("RUB", 100);
+        wallet.addMoney("USD", 200);
+        wallet.addMoney("EUR", 300);
+        assertEquals(30289, wallet.getTotalMoney("RUB"));
     }
 
 }
